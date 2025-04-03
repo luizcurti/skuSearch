@@ -1,0 +1,58 @@
+{
+  "info": {
+    "_postman_id": "b90a4b61-98e5-4a4d-888b-24e74c49e17b",
+    "name": "skuSearch API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Search SKU",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "Content-Type header specifying the body is JSON"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"findSku\": \"LTV719449/39/39\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/sku/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "sku"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find All SKUs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/sku/all",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "sku",
+            "all"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

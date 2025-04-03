@@ -1,17 +1,47 @@
-version: '3'
 services:
-  api-testeJson:
-    image: node
-    container_name: api-json
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - system-network
     restart: always
+    volumes:
+      - mongo-data:/data/db 
+  app:
+    build:
+      context: .
+    container_name: api-json
+    command: bash -c "npm run dev"
+    depends_on:
+      - mongo
     ports:
       - "3000:3000"
     volumes:
       - ./:/home/node/app
-    command: bash -c "cd /home/node/app && npm run dev"
     networks:
-      system-network:
-        ipv4_address: 15.10.0.11
+      - system-network
+    restart: always
+
+  seed:
+    build:
+      context: .
+    container_name: mongo-seed
+    depends_on:
+      - mongo
+    networks:
+      - system-network
+    restart: "no"  
+    volumes:
+      - ./:/home/node/app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/sku_search  
+    entrypoint: ["node", "/home/node/app/src/database/seeds/seeds.js"] # Define apenas o comando correto
+
+volumes:
+  mongo-data:
+
 networks:
   system-network:
     driver: bridge

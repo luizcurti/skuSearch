@@ -1,20 +1,52 @@
-# sku
+# skuSearch
 
-Before booting the system, run "npm install"
+skuSearch is a simple API for searching SKUs in a MongoDB database.
 
-You can use the container with docker-compose up
+## Requirements
+* Node.js
+* Docker and Docker composer
 
-or
+## Installation
+1. Clone this repository:
+* git clone https://github.com/luizcurti/skuSearch.git
 
-In nodemon server.js system folder
+2. Navigate to the project directory:
+* cd skuSearch
 
-The route for testing the api is: http://localhost:3000/sku/
+3. Install dependencies:
+* npm install
 
-the parameter
+## Running the API
+### Using Docker
+
+1. Start the container:
+* docker-compose up
+
+2. Using Nodemon
+* Start the server with:
+
+3. npm install -g nodemon
+* nodemon server.js
+
+## API Endpoints
+### Search SKU
+
+* URL: POST /sku/
+* Request Body:
 {
-    "findSku": "LTV719449/39/39"
+  "findSku": "LTV719449/39/39"
 }
 
-To run the tests
+* Successful Response:
+{
+  "sku": "LTV719449/39/39",
+  "name": "Example Product",
+  "price": 99.90
+}
 
-npx jest test
+### Tests
+1. To run tests, use:
+* npx jest test
+
+## Contribution
+Feel free to open issues or submit pull requests.

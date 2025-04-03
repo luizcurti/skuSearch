@@ -1,44 +1,50 @@
-const stockJson = require('../database/stock.json');
-const transactionsJson = require('../database/transactions.json');
+const Stock = require('../database/model/stock');
 
-class FindStock {
-  async search(req, res) {
-    try {
-      const { findSku } = req.body;
-      if (!findSku) { res.status(503).json({ 'Bad Request': 'Something went wrong!' }); }
+const {
+  getStockData, getTransactionData, calculateTransactions, calculateStock,
+} = require('../helpers/stockHelper');
 
-      let order = 0;
-      let refund = 0;
-      let stockNumber = 0;
-      let originalValue = 0;
+async function listAll(req, res) {
+  try {
+    const allStockItems = await Stock.find().select('sku stock');
 
-      const stockFiltered = stockJson.filter((stockFilter) => stockFilter.sku === findSku);
-      const transactionsFiltered = transactionsJson.filter(
-        (transactionsFilter) => transactionsFilter.sku === findSku,
-      );
-
-      // eslint-disable-next-line no-unused-vars
-      for (const { sku, type, qty } of transactionsFiltered) {
-        if (type === 'refund') { refund = qty + refund; }
-        if (type === 'order') { order = qty + order; }
-      }
-
-      if (stockFiltered.length !== 0) {
-        stockNumber = stockFiltered[0].stock;
-        originalValue = stockFiltered[0].stock;
-      }
-
-      stockNumber = (stockNumber - order) + refund;
-
-      return res.json({
-        findSku, originalValue, order, refund, stockNumber,
-      });
-    } catch (e) {
-      return res.status(400).json({
-        errors: e,
-      });
+    if (allStockItems.length === 0) {
+      return res.status(404).json({ message: 'No items found in stock.' });
     }
+
+    return res.json(allStockItems);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 }
 
-export default new FindStock();
+async function search(req, res) {
+  try {
+    const { findSku } = req.body;
+
+    if (typeof findSku !== 'string' || findSku.trim() === '') {
+      throw new Error('Invalid SKU provided.');
+    }
+
+    const stockData = await getStockData(findSku);
+    const transactionsData = await getTransactionData(findSku);
+
+    const { order, refund } = calculateTransactions(transactionsData);
+    const stockNumber = calculateStock(stockData, order, refund);
+
+    return res.json({
+      findSku,
+      originalValue: stockData.stock,
+      order,
+      refund,
+      stockNumber,
+    });
+  } catch (e) {
+    console.error('Error:', e.message);
+    return res.status(400).json({
+      errors: e.message,
+    });
+  }
+}
+
+module.exports = { search, listAll };

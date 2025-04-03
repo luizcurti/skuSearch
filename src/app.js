@@ -1,11 +1,17 @@
-import express from 'express';
-import skuRoutes from './routes/stockRoute';
+const express = require('express');
+const connectMongoDB = require('./database/mongoConnect');
+const skuRoutes = require('./routes/stockRoute');
 
 class App {
   constructor() {
     this.app = express();
+    this.connectDB();
     this.middlewares();
     this.routes();
+  }
+
+  connectDB() {
+    connectMongoDB();
   }
 
   middlewares() {
@@ -17,4 +23,4 @@ class App {
   }
 }
 
-export default new App().app;
+module.exports = new App().app;

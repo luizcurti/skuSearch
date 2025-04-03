@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "airbnb-base",
+    "plugin:jest/recommended"
+  ],
+  "env": {
+    "node": true,
+    "es2022": true,
+    "jest": true  
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022 ,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "off",
+    "class-methods-use-this": "off",
+    "import/first": "off",
+    "no-param-reassign": "off",
+    "next-line": "off",
+    "no-restricted-syntax": "off",
+    "max-len": ["error", { "code": 200 }],
+    "no-promise-executor-return": "off",
+    "jest/no-conditional-expect": "off"
+  },
+  "plugins": [
+    "jest"
+  ]
+}

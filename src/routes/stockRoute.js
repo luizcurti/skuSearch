@@ -1,8 +1,9 @@
-import { Router } from 'express';
-import findStock from '../controllers/stockController';
+const Router = require('express');
+const findStock = require('../controllers/stockController');
 
 const router = new Router();
 
 router.post('/sku', findStock.search);
+router.get('/sku', findStock.listAll);
 
-export default router;
+module.exports = router;
